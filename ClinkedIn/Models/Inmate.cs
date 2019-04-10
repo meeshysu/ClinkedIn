@@ -11,10 +11,13 @@ namespace ClinkedIn.Models
         {
             Username = username;
             Password = password;
+            
         }
 
         public int Id { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
+        public string Interest { get; set; }
+        public List<int> FriendId { get; set; } = new List<int>();
     }
 }

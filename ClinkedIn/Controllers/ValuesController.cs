@@ -21,7 +21,7 @@ namespace ClinkedIn.Controllers
         [HttpGet("{id}")]
         public ActionResult<string> Get(int id)
         {
-            return "value";
+            return "Feven";
         }
 
         // POST api/values

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ClinkedIn.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/inmate")]
     [ApiController]
     public class InmateController : ControllerBase
     {
@@ -36,7 +36,23 @@ namespace ClinkedIn.Controllers
 
             }
 
-            [HttpGet("{id}")]
+        [HttpGet("{id}")]
+        public ActionResult GetUser(int id)
+        {
+            var user = _userRepository.GetUser(id);
+            return Ok(user);
+        }
+
+        [HttpPost("{id}/addfriend/{friendId}")]
+        public ActionResult AddFriend(int id, int friendId)
+        {
+            var user = _userRepository.GetUser(id);
+            //List<int>  = new List<int>();
+            user.FriendId.Add(friendId);
+            return Ok(user);
+        }
+
+        [HttpGet("{id}")]
             public ActionResult GetUsers()
             {
                 var allUsers = _userRepository.GetUsers();
