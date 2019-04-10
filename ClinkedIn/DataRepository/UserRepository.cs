@@ -20,5 +20,10 @@ namespace ClinkedIn.DataRepository
 
             return newUser;
         }
+
+        public List<Inmate> GetUsers()
+        {
+            return _inmates;
+        }
     }
 }
