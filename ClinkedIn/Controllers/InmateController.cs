@@ -35,6 +35,13 @@ namespace ClinkedIn.Controllers
                 return Created($"api/users/{newUser.Id}", newUser);
 
             }
+
+            [HttpGet("{id}")]
+            public ActionResult GetUsers()
+            {
+                var allUsers = _userRepository.GetUsers();
+                return Created($"api/users/{allUsers}", allUsers);
+            }
     }
     public class CreateUserRequestValidator
     {
