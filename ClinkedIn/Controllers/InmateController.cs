@@ -30,7 +30,7 @@ namespace ClinkedIn.Controllers
                     return BadRequest(new { error = "users must have a username and password" });
                 }
 
-                var newUser = _userRepository.AddUser(createRequest.Username, createRequest.Password);
+                var newUser = _userRepository.AddUser(createRequest.Username, createRequest.Password, createRequest.Services);
 
                 return Created($"api/users/{newUser.Id}", newUser);
 
@@ -64,7 +64,8 @@ namespace ClinkedIn.Controllers
         public bool Validate(CreateUserRequest requestToValidate)
         {
             return string.IsNullOrEmpty(requestToValidate.Username)
-                   || string.IsNullOrEmpty(requestToValidate.Password);
+                   || string.IsNullOrEmpty(requestToValidate.Password)
+                   || string.IsNullOrEmpty(requestToValidate.Services);
         }
     }
 }

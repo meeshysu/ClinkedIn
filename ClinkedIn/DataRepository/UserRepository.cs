@@ -10,10 +10,15 @@ namespace ClinkedIn.DataRepository
     {
         static List<Inmate> _inmates = new List<Inmate>();
 
-        public Inmate AddUser(string username, string password)
+        public Inmate AddUser(string username, string password, string services)
         {
+<<<<<<< HEAD
             var newUser = new Inmate(username, password);
             //newUser.FriendId.Add(friendId);
+=======
+            var newUser = new Inmate(username, password, services);
+
+>>>>>>> 3d047550d92d859e1b9d063541a3b9b07f41ba63
             newUser.Id = _inmates.Count + 1;
 
             _inmates.Add(newUser);
