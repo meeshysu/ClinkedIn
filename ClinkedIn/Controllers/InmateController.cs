@@ -30,7 +30,7 @@ namespace ClinkedIn.Controllers
                     return BadRequest(new { error = "users must have a username and password" });
                 }
 
-                var newUser = _userRepository.AddUser(createRequest.Username, createRequest.Password, createRequest.Services);
+                var newUser = _userRepository.AddUser(createRequest.Username, createRequest.Password);
 
                 return Created($"api/users/{newUser.Id}", newUser);
 
@@ -47,25 +47,24 @@ namespace ClinkedIn.Controllers
         public ActionResult AddFriend(int id, int friendId)
         {
             var user = _userRepository.GetUser(id);
-            //List<int>  = new List<int>();
             user.FriendId.Add(friendId);
             return Ok(user);
         }
 
-        [HttpGet("{id}")]
-            public ActionResult GetUsers()
-            {
-                var allUsers = _userRepository.GetUsers();
-                return Created($"api/users/{allUsers}", allUsers);
-            }
+        [HttpPost("{id}/addinterest/{interests}/")]
+        public ActionResult GetUser(int id, string interests)
+        {
+            var userInterests = _userRepository.GetUser(id);
+            userInterests.Interests.Add(interests);
+            return Ok(userInterests);
+        }
     }
     public class CreateUserRequestValidator
     {
         public bool Validate(CreateUserRequest requestToValidate)
         {
             return string.IsNullOrEmpty(requestToValidate.Username)
-                   || string.IsNullOrEmpty(requestToValidate.Password)
-                   || string.IsNullOrEmpty(requestToValidate.Services);
+                   || string.IsNullOrEmpty(requestToValidate.Password);
         }
     }
 }
