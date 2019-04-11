@@ -47,10 +47,17 @@ namespace ClinkedIn.Controllers
         public ActionResult AddFriend(int id, int friendId)
         {
             var user = _userRepository.GetUser(id);
-            //List<int>  = new List<int>();
             user.FriendId.Add(friendId);
             return Ok(user);
         }
+
+        [HttpPost("{id}/addservices/{service}")]
+        public ActionResult AddService(int id, string service)
+        {
+            var user = _userRepository.GetUser(id);
+            user.Service.Add(service);
+            return Ok(user);
+        }//feven helped me thru this :3 mb
 
         [HttpGet("{id}")]
             public ActionResult GetUsers()
