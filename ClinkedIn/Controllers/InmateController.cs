@@ -60,15 +60,30 @@ namespace ClinkedIn.Controllers
         public ActionResult AddFriend(int id, int friendId)
         {
             var user = _userRepository.GetUser(id);
+<<<<<<< HEAD
             if (user.EnemisIds.Contains(friendId))
             {
                 user.EnemisIds.Remove(friendId);
             }
+=======
+>>>>>>> 5d82fdd755eb0d0ae83302221dc9e49bd2279f3e
             user.FriendId.Add(friendId);
             return Ok(user);
         }
 
+<<<<<<< HEAD
         [HttpGet("allUsers")]
+=======
+        [HttpPost("{id}/addservices/{service}")]
+        public ActionResult AddService(int id, string service)
+        {
+            var user = _userRepository.GetUser(id);
+            user.Service.Add(service);
+            return Ok(user);
+        }//feven helped me thru this :3 mb
+
+        [HttpGet("{id}")]
+>>>>>>> 5d82fdd755eb0d0ae83302221dc9e49bd2279f3e
             public ActionResult GetUsers()
             {
                 var allUsers = _userRepository.GetUsers();
