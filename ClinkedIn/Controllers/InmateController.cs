@@ -43,16 +43,32 @@ namespace ClinkedIn.Controllers
             return Ok(user);
         }
 
+        [HttpPost("{id}/addenemies/{enemyId}")]
+        public ActionResult AddEnemy(int id, int enemyId)
+        {
+            var user = _userRepository.GetUser(id);
+            if(user.FriendId.Contains(enemyId))
+            {
+                user.FriendId.Remove(enemyId);
+            }
+            user.EnemisIds.Add(enemyId);
+            return Ok(user);
+        }
+
+
         [HttpPost("{id}/addfriend/{friendId}")]
         public ActionResult AddFriend(int id, int friendId)
         {
             var user = _userRepository.GetUser(id);
-            //List<int>  = new List<int>();
+            if (user.EnemisIds.Contains(friendId))
+            {
+                user.EnemisIds.Remove(friendId);
+            }
             user.FriendId.Add(friendId);
             return Ok(user);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("allUsers")]
             public ActionResult GetUsers()
             {
                 var allUsers = _userRepository.GetUsers();
