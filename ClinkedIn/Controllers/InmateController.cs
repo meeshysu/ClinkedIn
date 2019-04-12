@@ -43,6 +43,13 @@ namespace ClinkedIn.Controllers
             return Ok(user);
         }
 
+        [HttpGet("getinterest/{interests}")]
+        public ActionResult FilterInterests(List<string> interests)
+        {
+            var userInterests = _userRepository.GetUsersByInterests(interests);
+            return Ok(userInterests);
+        }
+
         //[HttpGet("{service}")]
         //public ActionResult GetUser(int id)
         //{
@@ -66,7 +73,7 @@ namespace ClinkedIn.Controllers
         }
 
         [HttpPost("{id}/addinterest/{interests}/")]
-        public ActionResult AddUserInterests(int id, string interests)
+        public ActionResult AddInterests(int id, string interests)
         {
             var userInterests = _userRepository.GetUser(id);
             userInterests.Interests.Add(interests);

@@ -24,6 +24,7 @@ namespace ClinkedIn.DataRepository
         {
             return _inmates;
         }
+
         public Inmate GetUser(int id)
         {
             var getUser = GetUsers();
@@ -33,10 +34,11 @@ namespace ClinkedIn.DataRepository
             return user;
         }
 
-        public List<Inmate> GetUsersByInterest(List<string> interests)
+        public List<Inmate> GetUsersByInterests(List<string> interests)
         {
             var getUserInterests = _inmates.Where(inmate => inmate.Interests == interests).ToList();
             return getUserInterests;
         }
+
     }
 }
