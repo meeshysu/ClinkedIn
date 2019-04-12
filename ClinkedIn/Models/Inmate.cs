@@ -16,7 +16,7 @@ namespace ClinkedIn.Models
         public int Id { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
-        public string Interest { get; set; }
+        public List<string> Interests { get; set; } = new List<string>();
         public List<int> FriendId { get; set; } = new List<int>();
         public List<string> Service { get; set; } = new List<string>();
     }
