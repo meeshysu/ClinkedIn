@@ -13,28 +13,28 @@ namespace ClinkedIn.Controllers
     [ApiController]
     public class InmateController : ControllerBase
     {
-            readonly UserRepository _userRepository;
-            readonly CreateUserRequestValidator _validator;
+        readonly UserRepository _userRepository;
+        readonly CreateUserRequestValidator _validator;
 
-            public InmateController()
+        public InmateController()
+        {
+            _validator = new CreateUserRequestValidator();
+            _userRepository = new UserRepository();
+        }
+
+        [HttpPost("register")]
+        public ActionResult AddUser(CreateUserRequest createRequest)
+        {
+            if (_validator.Validate(createRequest))
             {
-                _validator = new CreateUserRequestValidator();
-                _userRepository = new UserRepository();
+                return BadRequest(new { error = "users must have a username and password" });
             }
 
-            [HttpPost("register")]
-            public ActionResult AddUser(CreateUserRequest createRequest)
-            {
-                if (_validator.Validate(createRequest))
-                {
-                    return BadRequest(new { error = "users must have a username and password" });
-                }
+            var newUser = _userRepository.AddUser(createRequest.Username, createRequest.Password);
 
-                var newUser = _userRepository.AddUser(createRequest.Username, createRequest.Password);
+            return Created($"api/users/{newUser.Id}", newUser);
 
-                return Created($"api/users/{newUser.Id}", newUser);
-
-            }
+        }
 
         [HttpGet("{id}")]
         public ActionResult GetUser(int id)
@@ -43,6 +43,7 @@ namespace ClinkedIn.Controllers
             return Ok(user);
         }
 
+<<<<<<< HEAD
         [HttpPost("{id}/addenemies/{enemyId}")]
         public ActionResult AddEnemy(int id, int enemyId)
         {
@@ -56,6 +57,22 @@ namespace ClinkedIn.Controllers
         }
 
 
+=======
+        //[HttpGet("{service}")]
+        //public ActionResult GetUser(int id)
+        //{
+        //    var user = _userRepository.GetUser(id);
+        //    return Ok(user);
+        //}
+
+        [HttpGet("allInmates")]
+        public ActionResult GetUsers()
+        {
+            var allUsers = _userRepository.GetUsers();
+            return Created($"api/users/{allUsers}", allUsers);
+        }
+
+>>>>>>> 5d552a03e8c371f370c99d7820fb8952c8b8617f
         [HttpPost("{id}/addfriend/{friendId}")]
         public ActionResult AddFriend(int id, int friendId)
         {
@@ -72,8 +89,19 @@ namespace ClinkedIn.Controllers
         }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         [HttpGet("allUsers")]
 =======
+=======
+        [HttpPost("{id}/addinterest/{interests}/")]
+        public ActionResult AddUserInterests(int id, string interests)
+        {
+            var userInterests = _userRepository.GetUser(id);
+            userInterests.Interests.Add(interests);
+            return Ok(userInterests);
+        }
+
+>>>>>>> 5d552a03e8c371f370c99d7820fb8952c8b8617f
         [HttpPost("{id}/addservices/{service}")]
         public ActionResult AddService(int id, string service)
         {
@@ -81,6 +109,7 @@ namespace ClinkedIn.Controllers
             user.Service.Add(service);
             return Ok(user);
         }//feven helped me thru this :3 mb
+<<<<<<< HEAD
 
         [HttpGet("{id}")]
 >>>>>>> 5d82fdd755eb0d0ae83302221dc9e49bd2279f3e
@@ -89,6 +118,8 @@ namespace ClinkedIn.Controllers
                 var allUsers = _userRepository.GetUsers();
                 return Created($"api/users/{allUsers}", allUsers);
             }
+=======
+>>>>>>> 5d552a03e8c371f370c99d7820fb8952c8b8617f
     }
     public class CreateUserRequestValidator
     {
