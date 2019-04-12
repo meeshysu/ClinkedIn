@@ -79,7 +79,23 @@ namespace ClinkedIn.Controllers
             var user = _userRepository.GetUser(id);
             user.Service.Add(service);
             return Ok(user);
-        }//feven helped me thru this :3 mb
+        }
+
+        [HttpDelete("{id}/deleteservice/{service}")]
+        public ActionResult DeleteService(int id, string service)
+        {
+            var user = _userRepository.GetUser(id);
+            user.Service.Remove(service);
+            return Ok(user);
+        }
+
+        [HttpDelete("{id}/deleteinterest/{interests}")]
+        public ActionResult DeleteUserInterest(int id, string interests)
+        {
+            var userInterests = _userRepository.GetUser(id);
+            userInterests.Interests.Remove(interests);
+            return Ok(userInterests);
+        }
     }
     public class CreateUserRequestValidator
     {
