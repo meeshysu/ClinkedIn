@@ -12,14 +12,8 @@ namespace ClinkedIn.DataRepository
 
         public Inmate AddUser(string username, string password)
         {
-<<<<<<< HEAD
-
             var newUser = new Inmate(username, password);
             //newUser.FriendId.Add(friendId);
-
-=======
-            var newUser = new Inmate(username, password);
->>>>>>> 5d82fdd755eb0d0ae83302221dc9e49bd2279f3e
             newUser.Id = _inmates.Count + 1;
 
             _inmates.Add(newUser);

@@ -13,28 +13,28 @@ namespace ClinkedIn.Controllers
     [ApiController]
     public class InmateController : ControllerBase
     {
-        readonly UserRepository _userRepository;
-        readonly CreateUserRequestValidator _validator;
+            readonly UserRepository _userRepository;
+            readonly CreateUserRequestValidator _validator;
 
-        public InmateController()
-        {
-            _validator = new CreateUserRequestValidator();
-            _userRepository = new UserRepository();
-        }
-
-        [HttpPost("register")]
-        public ActionResult AddUser(CreateUserRequest createRequest)
-        {
-            if (_validator.Validate(createRequest))
+            public InmateController()
             {
-                return BadRequest(new { error = "users must have a username and password" });
+                _validator = new CreateUserRequestValidator();
+                _userRepository = new UserRepository();
             }
 
-            var newUser = _userRepository.AddUser(createRequest.Username, createRequest.Password);
+            [HttpPost("register")]
+            public ActionResult AddUser(CreateUserRequest createRequest)
+            {
+                if (_validator.Validate(createRequest))
+                {
+                    return BadRequest(new { error = "users must have a username and password" });
+                }
 
-            return Created($"api/users/{newUser.Id}", newUser);
+                var newUser = _userRepository.AddUser(createRequest.Username, createRequest.Password);
 
-        }
+                return Created($"api/users/{newUser.Id}", newUser);
+
+            }
 
         [HttpGet("{id}")]
         public ActionResult GetUser(int id)
@@ -43,7 +43,34 @@ namespace ClinkedIn.Controllers
             return Ok(user);
         }
 
-<<<<<<< HEAD
+        [HttpGet("{id}/getmutualfriends/{friendId}")]
+        public ActionResult MyFriendFriend(int id, int friendId)
+        {
+            var inmate = _userRepository.GetUser(id);
+            var inmates = _userRepository.GetUsers();
+            var filterFriend = (from inmatez in inmates
+                                where friendId == inmatez.Id
+                                select inmatez).SingleOrDefault();
+            var getMutualFriend = (filterFriend.FriendId);
+           
+            List<string> name = new List<string>();
+            foreach (int i in getMutualFriend)
+            {
+                foreach (var inmateId in inmates)
+                {
+                    if (i == inmateId.Id)
+                    {
+                        name.Add(inmateId.Username);
+                        //return name;
+                    }
+                    //var friendsNames = (from myfriendId in i
+                    //                    where myfriendId == inmate.Id
+                    //                    select myfriendId.)
+                }
+            }
+            return Ok(name);
+        }
+
         [HttpPost("{id}/addenemies/{enemyId}")]
         public ActionResult AddEnemy(int id, int enemyId)
         {
@@ -57,51 +84,20 @@ namespace ClinkedIn.Controllers
         }
 
 
-=======
-        //[HttpGet("{service}")]
-        //public ActionResult GetUser(int id)
-        //{
-        //    var user = _userRepository.GetUser(id);
-        //    return Ok(user);
-        //}
-
-        [HttpGet("allInmates")]
-        public ActionResult GetUsers()
-        {
-            var allUsers = _userRepository.GetUsers();
-            return Created($"api/users/{allUsers}", allUsers);
-        }
-
->>>>>>> 5d552a03e8c371f370c99d7820fb8952c8b8617f
         [HttpPost("{id}/addfriend/{friendId}")]
         public ActionResult AddFriend(int id, int friendId)
         {
             var user = _userRepository.GetUser(id);
-<<<<<<< HEAD
+
             if (user.EnemisIds.Contains(friendId))
             {
                 user.EnemisIds.Remove(friendId);
             }
-=======
->>>>>>> 5d82fdd755eb0d0ae83302221dc9e49bd2279f3e
             user.FriendId.Add(friendId);
             return Ok(user);
         }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
         [HttpGet("allUsers")]
-=======
-=======
-        [HttpPost("{id}/addinterest/{interests}/")]
-        public ActionResult AddUserInterests(int id, string interests)
-        {
-            var userInterests = _userRepository.GetUser(id);
-            userInterests.Interests.Add(interests);
-            return Ok(userInterests);
-        }
-
->>>>>>> 5d552a03e8c371f370c99d7820fb8952c8b8617f
         [HttpPost("{id}/addservices/{service}")]
         public ActionResult AddService(int id, string service)
         {
@@ -109,17 +105,13 @@ namespace ClinkedIn.Controllers
             user.Service.Add(service);
             return Ok(user);
         }//feven helped me thru this :3 mb
-<<<<<<< HEAD
 
         [HttpGet("{id}")]
->>>>>>> 5d82fdd755eb0d0ae83302221dc9e49bd2279f3e
             public ActionResult GetUsers()
             {
                 var allUsers = _userRepository.GetUsers();
                 return Created($"api/users/{allUsers}", allUsers);
             }
-=======
->>>>>>> 5d552a03e8c371f370c99d7820fb8952c8b8617f
     }
     public class CreateUserRequestValidator
     {
