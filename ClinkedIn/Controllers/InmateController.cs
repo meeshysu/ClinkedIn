@@ -43,25 +43,23 @@ namespace ClinkedIn.Controllers
             return Ok(user);
         }
 
-        [HttpGet("{id}/getmutualfriends/{friendId}")]
+        [HttpGet("{id}/getmyfriendsfriends/{friendId}")]
         public ActionResult MyFriendFriend(int id, int friendId)
         {
-            var inmate = _userRepository.GetUser(id);
             var inmates = _userRepository.GetUsers();
-            var filterFriend = (from inmatez in inmates
+            var filterMyFriend = (from inmatez in inmates
                                 where friendId == inmatez.Id
                                 select inmatez).SingleOrDefault();
-            var getMutualFriend = (filterFriend.FriendId);
+            var getMyFriendzFriendsList = filterMyFriend.FriendId;
            
             List<string> name = new List<string>();
-            foreach (int i in getMutualFriend)
+            foreach (int getMyFriendzFriend in getMyFriendzFriendsList)
             {
-                foreach (var inmateId in inmates)
+                foreach (var inmateById in inmates)
                 {
-                    if (i == inmateId.Id)
+                    if (getMyFriendzFriend == inmateById.Id)
                     {
-                        name.Add(inmateId.Username);
-                        //return name;
+                        name.Add(inmateById.Username);
                     }
                     //var friendsNames = (from myfriendId in i
                     //                    where myfriendId == inmate.Id
