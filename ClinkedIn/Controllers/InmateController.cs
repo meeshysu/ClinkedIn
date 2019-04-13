@@ -30,7 +30,7 @@ namespace ClinkedIn.Controllers
                     return BadRequest(new { error = "users must have a username and password" });
                 }
 
-                var newUser = _userRepository.AddUser(createRequest.Username, createRequest.Password);
+            var newUser = _userRepository.AddUser(createRequest.Username, createRequest.Password);
 
                 return Created($"api/users/{newUser.Id}", newUser);
 
@@ -78,9 +78,18 @@ namespace ClinkedIn.Controllers
         public ActionResult EditInterests(int id, string myInterests, string editedInterest)
         {
             var userInfo = _userRepository.GetUser(id);
-                var index = userInfo.Interests.IndexOf(myInterests);
-                userInfo.Interests[index] = editedInterest;
+            var index = userInfo.Interests.IndexOf(myInterests);
+            userInfo.Interests[index] = editedInterest;
             return Ok(userInfo.Interests[index]);
+        }
+
+        [HttpPut("{id}/editservice/{myServices}/{editedService}")]
+        public ActionResult EditService(int id, string myServices, string editedService)
+        {
+            var userInfo = _userRepository.GetUser(id);
+            var index = userInfo.Service.IndexOf(myServices);
+            userInfo.Service[index] = editedService;
+            return Ok(userInfo.Service[index]);
         }
 
         [HttpPost("{id}/addenemies/{enemyId}")]
