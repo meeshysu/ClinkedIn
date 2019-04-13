@@ -50,13 +50,6 @@ namespace ClinkedIn.Controllers
             return Ok(userInterests);
         }
 
-        //[HttpGet("{service}")]
-        //public ActionResult GetUser(int id)
-        //{
-        //    var user = _userRepository.GetUser(id);
-        //    return Ok(user);
-        //}
-
         [HttpGet("allInmates")]
         public ActionResult GetUsers()
         {
