@@ -61,12 +61,27 @@ namespace ClinkedIn.Controllers
                     {
                         name.Add(inmateById.Username);
                     }
-                    //var friendsNames = (from myfriendId in i
-                    //                    where myfriendId == inmate.Id
-                    //                    select myfriendId.)
                 }
             }
             return Ok(name);
+        }
+
+
+        [HttpPut("{id}/editinterest/myinterests/{editedinterest}")]
+        public ActionResult EditInterests(int id, string myInterests, string editedInterest)
+        {
+            var userInfo = _userRepository.GetUser(id);
+            //foreach (var i in userInfo.Interests)
+            //{
+                var index = userInfo.Interests.IndexOf(myInterests);
+                var indexOfInterests = userInfo.Interests[index];
+                indexOfInterests = editedInterest;
+            //}
+            //if (userInfo.Interests.Equals(myInterests))
+            //    {
+            //    editedInterest.Replace(' ', ' ');
+            //    }
+            return Ok(indexOfInterests);
         }
 
         [HttpPost("{id}/addenemies/{enemyId}")]
