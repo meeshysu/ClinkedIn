@@ -74,21 +74,13 @@ namespace ClinkedIn.Controllers
         }
 
 
-        [HttpPut("{id}/editinterest/myinterests/{editedinterest}")]
+        [HttpPut("{id}/editinterest/{myInterests}/{editedInterest}")]
         public ActionResult EditInterests(int id, string myInterests, string editedInterest)
         {
             var userInfo = _userRepository.GetUser(id);
-            //foreach (var i in userInfo.Interests)
-            //{
                 var index = userInfo.Interests.IndexOf(myInterests);
-                var indexOfInterests = userInfo.Interests[index];
-                indexOfInterests = editedInterest;
-            //}
-            //if (userInfo.Interests.Equals(myInterests))
-            //    {
-            //    editedInterest.Replace(' ', ' ');
-            //    }
-            return Ok(indexOfInterests);
+                userInfo.Interests[index] = editedInterest;
+            return Ok(userInfo.Interests[index]);
         }
 
         [HttpPost("{id}/addenemies/{enemyId}")]
