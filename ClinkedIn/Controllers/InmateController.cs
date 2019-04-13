@@ -13,64 +13,26 @@ namespace ClinkedIn.Controllers
     [ApiController]
     public class InmateController : ControllerBase
     {
-            readonly UserRepository _userRepository;
-            readonly CreateUserRequestValidator _validator;
+        readonly UserRepository _userRepository;
+        readonly CreateUserRequestValidator _validator;
 
-            public InmateController()
-            {
-                _validator = new CreateUserRequestValidator();
-                _userRepository = new UserRepository();
-            }
-
-            [HttpPost("register")]
-            public ActionResult AddUser(CreateUserRequest createRequest)
-            {
-                if (_validator.Validate(createRequest))
-                {
-                    return BadRequest(new { error = "users must have a username and password" });
-                }
-
-                var newUser = _userRepository.AddUser(createRequest.Username, createRequest.Password);
-
-                return Created($"api/users/{newUser.Id}", newUser);
-
-            }
-
-        [HttpGet("{id}")]
-        public ActionResult GetUser(int id)
+        public InmateController()
         {
-            var user = _userRepository.GetUser(id);
-            return Ok(user);
+            _validator = new CreateUserRequestValidator();
+            _userRepository = new UserRepository();
         }
 
-        [HttpGet("getinterest/{interests}")]
-        public ActionResult GetUsersByInterests(string interests)
+        [HttpPost("register")]
+        public ActionResult AddUser(CreateUserRequest createRequest)
         {
-            var userInterests = _userRepository.GetUsersByInterests(interests);
-            return Ok(userInterests);
-        }
-
-        [HttpGet("{id}/getmyfriendsfriends/{friendId}")]
-        public ActionResult MyFriendFriend(int id, int friendId)
-        {
-            var inmates = _userRepository.GetUsers();
-            var filterMyFriend = (from inmatez in inmates
-                                where friendId == inmatez.Id
-                                select inmatez).SingleOrDefault();
-            var getMyFriendzFriendsList = filterMyFriend.FriendId;
-           
-            List<string> name = new List<string>();
-            foreach (int getMyFriendzFriend in getMyFriendzFriendsList)
+            if (_validator.Validate(createRequest))
             {
-                foreach (var inmateById in inmates)
-                {
-                    if (getMyFriendzFriend == inmateById.Id)
-                    {
-                        name.Add(inmateById.Username);
-                    }
-                }
+                return BadRequest(new { error = "users must have a username and password" });
             }
-            return Ok(name);
+
+            var newUser = _userRepository.AddUser(createRequest.Username, createRequest.Password);
+
+            return Created($"api/users/{newUser.Id}", newUser);
         }
 
         [HttpPost("{id}/addenemies/{enemyId}")]
@@ -115,13 +77,57 @@ namespace ClinkedIn.Controllers
             return Ok(user);
         }
 
+        [HttpPost("{id}/daysleft/{daysLeft}")]
+        public ActionResult AddSentenceLength(int id, int daysLeft)
+        {
+            _userRepository.GetUser(id).DaysLeft = daysLeft;
+           
+            return Ok(daysLeft);
+        }
+
         [HttpGet("allInmates")]
-            public ActionResult GetUsers()
+        public ActionResult GetUsers()
+        {
+            var allUsers = _userRepository.GetUsers();
+            return Ok(allUsers);
+        }
+
+        [HttpGet("{id}")]
+        public ActionResult GetUser(int id)
+        {
+            var user = _userRepository.GetUser(id);
+            return Ok(user);
+        }
+
+        [HttpGet("getinterest/{interests}")]
+        public ActionResult GetUsersByInterests(string interests)
+        {
+            var userInterests = _userRepository.GetUsersByInterests(interests);
+            return Ok(userInterests);
+        }
+
+        [HttpGet("{id}/getmyfriendsfriends/{friendId}")]
+        public ActionResult MyFriendFriend(int id, int friendId)
+        {
+            var inmates = _userRepository.GetUsers();
+            var filterMyFriend = (from inmatez in inmates
+                                  where friendId == inmatez.Id
+                                  select inmatez).SingleOrDefault();
+            var getMyFriendzFriendsList = filterMyFriend.FriendId;
+
+            List<string> name = new List<string>();
+            foreach (int getMyFriendzFriend in getMyFriendzFriendsList)
             {
-                var allUsers = _userRepository.GetUsers();
-                return Ok(allUsers);
+                foreach (var inmateById in inmates)
+                {
+                    if (getMyFriendzFriend == inmateById.Id)
+                    {
+                        name.Add(inmateById.Username);
+                    }
+                }
             }
-        
+            return Ok(name);
+        }
 
         [HttpDelete("{id}/deleteservice/{service}")]
         public ActionResult DeleteService(int id, string service)
@@ -139,12 +145,12 @@ namespace ClinkedIn.Controllers
             return Ok(userInterests);
         }
     }
-    public class CreateUserRequestValidator
-    {
-        public bool Validate(CreateUserRequest requestToValidate)
+        public class CreateUserRequestValidator
         {
-            return string.IsNullOrEmpty(requestToValidate.Username)
-                   || string.IsNullOrEmpty(requestToValidate.Password);
+            public bool Validate(CreateUserRequest requestToValidate)
+            {
+                return string.IsNullOrEmpty(requestToValidate.Username)
+                       || string.IsNullOrEmpty(requestToValidate.Password);
+            }
         }
-    }
 }

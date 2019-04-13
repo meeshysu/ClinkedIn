@@ -34,6 +34,13 @@ namespace ClinkedIn.DataRepository
             return user;
         }
 
+        public Inmate GetUserDays(int daysleft)
+        {
+            var getUser = GetUsers();
+            var user = _inmates.Where(something => something.DaysLeft == daysleft).SingleOrDefault(); 
+            return user;
+        }
+
         public Inmate GetUsersByInterests(string interests)
         {
 
