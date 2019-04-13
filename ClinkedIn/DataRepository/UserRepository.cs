@@ -34,9 +34,10 @@ namespace ClinkedIn.DataRepository
             return user;
         }
 
-        public List<Inmate> GetUsersByInterests(List<string> interests)
+        public Inmate GetUsersByInterests(string interests)
         {
-            var getUserInterests = _inmates.Where(inmate => inmate.Interests == interests).ToList();
+
+            var getUserInterests = _inmates.Where(something => something.Interests.Contains(interests)).SingleOrDefault();
             return getUserInterests;
         }
 

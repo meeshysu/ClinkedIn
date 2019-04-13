@@ -43,13 +43,13 @@ namespace ClinkedIn.Controllers
             return Ok(user);
         }
 
-<<<<<<< HEAD
         [HttpGet("getinterest/{interests}")]
-        public ActionResult FilterInterests(List<string> interests)
+        public ActionResult GetUsersByInterests(string interests)
         {
             var userInterests = _userRepository.GetUsersByInterests(interests);
             return Ok(userInterests);
-=======
+        }
+
         [HttpGet("{id}/getmyfriendsfriends/{friendId}")]
         public ActionResult MyFriendFriend(int id, int friendId)
         {
@@ -68,13 +68,9 @@ namespace ClinkedIn.Controllers
                     {
                         name.Add(inmateById.Username);
                     }
-                    //var friendsNames = (from myfriendId in i
-                    //                    where myfriendId == inmate.Id
-                    //                    select myfriendId.)
                 }
             }
             return Ok(name);
->>>>>>> master
         }
 
         [HttpPost("{id}/addenemies/{enemyId}")]
@@ -103,7 +99,6 @@ namespace ClinkedIn.Controllers
             return Ok(user);
         }
 
-<<<<<<< HEAD
         [HttpPost("{id}/addinterest/{interests}/")]
         public ActionResult AddInterests(int id, string interests)
         {
@@ -112,9 +107,6 @@ namespace ClinkedIn.Controllers
             return Ok(userInterests);
         }
 
-=======
-        [HttpGet("allUsers")]
->>>>>>> master
         [HttpPost("{id}/addservices/{service}")]
         public ActionResult AddService(int id, string service)
         {
@@ -123,11 +115,11 @@ namespace ClinkedIn.Controllers
             return Ok(user);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("allInmates")]
             public ActionResult GetUsers()
             {
                 var allUsers = _userRepository.GetUsers();
-                return Created($"api/users/{allUsers}", allUsers);
+                return Ok(allUsers);
             }
         
 
