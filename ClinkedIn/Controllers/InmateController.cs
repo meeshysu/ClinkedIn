@@ -13,8 +13,8 @@ namespace ClinkedIn.Controllers
     [ApiController]
     public class InmateController : ControllerBase
     {
-            readonly UserRepository _userRepository;
-            readonly CreateUserRequestValidator _validator;
+        readonly UserRepository _userRepository;
+        readonly CreateUserRequestValidator _validator;
 
             public InmateController()
             {
@@ -42,37 +42,6 @@ namespace ClinkedIn.Controllers
             var user = _userRepository.GetUser(id);
             return Ok(user);
         }
-
-        [HttpGet("getinterest/{interests}")]
-        public ActionResult GetUsersByInterests(string interests)
-        {
-            var userInterests = _userRepository.GetUsersByInterests(interests);
-            return Ok(userInterests);
-        }
-
-        [HttpGet("{id}/getmyfriendsfriends/{friendId}")]
-        public ActionResult MyFriendFriend(int id, int friendId)
-        {
-            var inmates = _userRepository.GetUsers();
-            var filterMyFriend = (from inmatez in inmates
-                                where friendId == inmatez.Id
-                                select inmatez).SingleOrDefault();
-            var getMyFriendzFriendsList = filterMyFriend.FriendId;
-           
-            List<string> name = new List<string>();
-            foreach (int getMyFriendzFriend in getMyFriendzFriendsList)
-            {
-                foreach (var inmateById in inmates)
-                {
-                    if (getMyFriendzFriend == inmateById.Id)
-                    {
-                        name.Add(inmateById.Username);
-                    }
-                }
-            }
-            return Ok(name);
-        }
-
 
         [HttpPut("{id}/editinterest/{myInterests}/{editedInterest}")]
         public ActionResult EditInterests(int id, string myInterests, string editedInterest)
@@ -104,7 +73,6 @@ namespace ClinkedIn.Controllers
             return Ok(user);
         }
 
-
         [HttpPost("{id}/addfriend/{friendId}")]
         public ActionResult AddFriend(int id, int friendId)
         {
@@ -134,13 +102,43 @@ namespace ClinkedIn.Controllers
             return Ok(user);
         }
 
+        [HttpPost("{id}/daysleft/{daysLeft}")]
+        public ActionResult AddSentenceLength(int id, int daysLeft)
+        {
+            _userRepository.GetUser(id).DaysLeft = daysLeft;
+           
+            return Ok(_userRepository.GetUser(id));
+        }
+
         [HttpGet("allInmates")]
-            public ActionResult GetUsers()
+        public ActionResult GetUsers()
+        {
+            var allUsers = _userRepository.GetUsers();
+            return Ok(allUsers);
+        }
+
+        [HttpGet("{id}/getmyfriendsfriends/{friendId}")]
+        public ActionResult MyFriendFriend(int id, int friendId)
+        {
+            var inmates = _userRepository.GetUsers();
+            var filterMyFriend = (from inmatez in inmates
+                                  where friendId == inmatez.Id
+                                  select inmatez).SingleOrDefault();
+            var getMyFriendzFriendsList = filterMyFriend.FriendId;
+
+            List<string> name = new List<string>();
+            foreach (int getMyFriendzFriend in getMyFriendzFriendsList)
             {
-                var allUsers = _userRepository.GetUsers();
-                return Ok(allUsers);
+                foreach (var inmateById in inmates)
+                {
+                    if (getMyFriendzFriend == inmateById.Id)
+                    {
+                        name.Add(inmateById.Username);
+                    }
+                }
             }
-        
+            return Ok(name);
+        }
 
         [HttpDelete("{id}/deleteservice/{service}")]
         public ActionResult DeleteService(int id, string service)
@@ -158,12 +156,12 @@ namespace ClinkedIn.Controllers
             return Ok(userInterests);
         }
     }
-    public class CreateUserRequestValidator
-    {
-        public bool Validate(CreateUserRequest requestToValidate)
+        public class CreateUserRequestValidator
         {
-            return string.IsNullOrEmpty(requestToValidate.Username)
-                   || string.IsNullOrEmpty(requestToValidate.Password);
+            public bool Validate(CreateUserRequest requestToValidate)
+            {
+                return string.IsNullOrEmpty(requestToValidate.Username)
+                       || string.IsNullOrEmpty(requestToValidate.Password);
+            }
         }
-    }
 }

@@ -21,5 +21,6 @@ namespace ClinkedIn.Models
         public List<int> FriendId { get; set; } = new List<int>();
         public List<int> EnemisIds { get; set; } = new List<int>();
         public List<string> Service { get; set; } = new List<string>();
+        public int DaysLeft { get; set; }
     }
 }
