@@ -43,6 +43,13 @@ namespace ClinkedIn.Controllers
             return Ok(user);
         }
 
+        [HttpGet("getinterest/{interests}")]
+        public ActionResult GetUsersByInterests(string interests)
+        {
+            var userInterests = _userRepository.GetUsersByInterests(interests);
+            return Ok(userInterests);
+        }
+
         [HttpGet("{id}/getmyfriendsfriends/{friendId}")]
         public ActionResult MyFriendFriend(int id, int friendId)
         {
@@ -110,7 +117,14 @@ namespace ClinkedIn.Controllers
             return Ok(user);
         }
 
-        [HttpGet("allUsers")]
+        [HttpPost("{id}/addinterest/{interests}/")]
+        public ActionResult AddInterests(int id, string interests)
+        {
+            var userInterests = _userRepository.GetUser(id);
+            userInterests.Interests.Add(interests);
+            return Ok(userInterests);
+        }
+
         [HttpPost("{id}/addservices/{service}")]
         public ActionResult AddService(int id, string service)
         {
@@ -119,11 +133,11 @@ namespace ClinkedIn.Controllers
             return Ok(user);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("allInmates")]
             public ActionResult GetUsers()
             {
                 var allUsers = _userRepository.GetUsers();
-                return Created($"api/users/{allUsers}", allUsers);
+                return Ok(allUsers);
             }
         
 
