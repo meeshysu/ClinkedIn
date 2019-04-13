@@ -82,7 +82,7 @@ namespace ClinkedIn.Controllers
         {
             _userRepository.GetUser(id).DaysLeft = daysLeft;
            
-            return Ok(daysLeft);
+            return Ok(_userRepository.GetUser(id));
         }
 
         [HttpGet("allInmates")]
