@@ -7,10 +7,11 @@ namespace ClinkedIn.Models
 {
     public class Inmate
     { 
-        public Inmate(string username, string password)
+        public Inmate(string username, string password, DateTime releaseDate)
         {
             Username = username;
             Password = password;
+            ReleaseDate = releaseDate;
         }
 
         public int Id { get; set; }
@@ -21,5 +22,8 @@ namespace ClinkedIn.Models
         public List<int> EnemisIds { get; set; } = new List<int>();
         public string Services { get; set; }
         public List<string> Service { get; set; } = new List<string>();
+        public int Sentence { get; set; }
+        public DateTime ReleaseDate { get; set; }
+        public string DaysLeft { get; set; }
     }
 }
