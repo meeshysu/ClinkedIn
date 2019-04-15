@@ -16,26 +16,33 @@ namespace ClinkedIn.Controllers
         readonly UserRepository _userRepository;
         readonly CreateUserRequestValidator _validator;
 
-            public InmateController()
+        public InmateController()
+        {
+            _validator = new CreateUserRequestValidator();
+            _userRepository = new UserRepository();
+        }
+
+        [HttpPost("register")]
+        public ActionResult AddUser(CreateUserRequest createRequest)
+        {
+            if (_validator.Validate(createRequest))
             {
-                _validator = new CreateUserRequestValidator();
-                _userRepository = new UserRepository();
+                return BadRequest(new { error = "users must have a username and password" });
             }
 
-            [HttpPost("register")]
-            public ActionResult AddUser(CreateUserRequest createRequest)
-            {
-                if (_validator.Validate(createRequest))
-                {
-                    return BadRequest(new { error = "users must have a username and password" });
-                }
-
-                var newUser = _userRepository.AddUser(createRequest.Username, createRequest.Password, createRequest.ReleaseDate);
+            var newUser = _userRepository.AddUser(createRequest.Username, createRequest.Password, createRequest.ReleaseDate);
 
 
-                return Created($"api/users/{newUser.Id}", newUser);
+            return Created($"api/users/{newUser.Id}", newUser);
 
-            }
+        }
+
+        [HttpGet("allInmates")]
+        public ActionResult GetUsers()
+        {
+            var allUsers = _userRepository.GetUsers();
+            return Ok(allUsers);
+        }
 
         [HttpGet("{id}")]
         public ActionResult GetUser(int id)
@@ -44,29 +51,35 @@ namespace ClinkedIn.Controllers
             return Ok(user);
         }
 
-        [HttpPut("{id}/editinterest/{myInterests}/{editedInterest}")]
-        public ActionResult EditInterests(int id, string myInterests, string editedInterest)
-        {
-            var userInfo = _userRepository.GetUser(id);
-            var index = userInfo.Interests.IndexOf(myInterests);
-            userInfo.Interests[index] = editedInterest;
-            return Ok(userInfo.Interests[index]);
-        }
 
-        [HttpPut("{id}/editservice/{myServices}/{editedService}")]
-        public ActionResult EditService(int id, string myServices, string editedService)
+        [HttpGet("{id}/getmyfriendsfriends/{friendId}")]
+        public ActionResult MyFriendFriend(int id, int friendId)
         {
-            var userInfo = _userRepository.GetUser(id);
-            var index = userInfo.Service.IndexOf(myServices);
-            userInfo.Service[index] = editedService;
-            return Ok(userInfo.Service[index]);
+            var inmates = _userRepository.GetUsers();
+            var filterMyFriend = (from inmatez in inmates
+                                  where friendId == inmatez.Id
+                                  select inmatez).SingleOrDefault();
+            var getMyFriendzFriendsList = filterMyFriend.FriendId;
+
+            List<string> name = new List<string>();
+            foreach (int getMyFriendzFriend in getMyFriendzFriendsList)
+            {
+                foreach (var inmateById in inmates)
+                {
+                    if (getMyFriendzFriend == inmateById.Id)
+                    {
+                        name.Add(inmateById.Username);
+                    }
+                }
+            }
+            return Ok(name);
         }
 
         [HttpPost("{id}/addenemies/{enemyId}")]
         public ActionResult AddEnemy(int id, int enemyId)
         {
             var user = _userRepository.GetUser(id);
-            if(user.FriendId.Contains(enemyId))
+            if (user.FriendId.Contains(enemyId))
             {
                 user.FriendId.Remove(enemyId);
             }
@@ -103,42 +116,35 @@ namespace ClinkedIn.Controllers
             return Ok(user);
         }
 
-        //[HttpPost("{id}/daysleft/{daysLeft}")]
-        //public ActionResult AddSentenceLength(int id, int daysLeft)
-        //{
-        //    _userRepository.GetUser(id).DaysLeft = daysLeft;
-           
-        //    return Ok(_userRepository.GetUser(id));
-        //}
-
-        [HttpGet("allInmates")]
-        public ActionResult GetUsers()
+        [HttpPut("{id}/editinterest/{myInterests}/{editedInterest}")]
+        public ActionResult EditInterests(int id, string myInterests, string editedInterest)
         {
-            var allUsers = _userRepository.GetUsers();
-            return Ok(allUsers);
+            var userInfo = _userRepository.GetUser(id);
+            var index = userInfo.Interests.IndexOf(myInterests);
+            userInfo.Interests[index] = editedInterest;
+            return Ok(userInfo.Interests[index]);
         }
 
-        [HttpGet("{id}/getmyfriendsfriends/{friendId}")]
-        public ActionResult MyFriendFriend(int id, int friendId)
+        [HttpPut("{id}/editservice/{myServices}/{editedService}")]
+        public ActionResult EditService(int id, string myServices, string editedService)
         {
-            var inmates = _userRepository.GetUsers();
-            var filterMyFriend = (from inmatez in inmates
-                                  where friendId == inmatez.Id
-                                  select inmatez).SingleOrDefault();
-            var getMyFriendzFriendsList = filterMyFriend.FriendId;
+            var userInfo = _userRepository.GetUser(id);
+            var index = userInfo.Service.IndexOf(myServices);
+            userInfo.Service[index] = editedService;
+            return Ok(userInfo.Service[index]);
+        }
 
-            List<string> name = new List<string>();
-            foreach (int getMyFriendzFriend in getMyFriendzFriendsList)
-            {
-                foreach (var inmateById in inmates)
-                {
-                    if (getMyFriendzFriend == inmateById.Id)
-                    {
-                        name.Add(inmateById.Username);
-                    }
-                }
-            }
-            return Ok(name);
+        [HttpPut("{id}/getsentence")]
+        public ActionResult GetSentence(int id)
+        {
+            //Get these values however you like.
+            //DateTime daysLeft = DateTime.Parse("1/1/2012 12:00:01 AM");
+            DateTime startDate = DateTime.Now;
+
+            //Calculate countdown timer.
+            TimeSpan t = _userRepository.GetUser(id).ReleaseDate - startDate;
+            _userRepository.GetUser(id).DaysLeft = string.Format("You will be released in {0} Days, {1} Hours, {2} Minutes, {3} Seconds.", t.Days, t.Hours, t.Minutes, t.Seconds);
+            return Ok(_userRepository.GetUser(id).DaysLeft);
         }
 
         [HttpDelete("{id}/deleteservice/{service}")]
@@ -155,20 +161,6 @@ namespace ClinkedIn.Controllers
             var userInterests = _userRepository.GetUser(id);
             userInterests.Interests.Remove(interests);
             return Ok(userInterests);
-        }
-
-        [HttpPut("{id}/getsentence")]
-        public ActionResult GetSentence(int id)
-        {
-            //Get these values however you like.
-            //DateTime daysLeft = DateTime.Parse("1/1/2012 12:00:01 AM");
-            DateTime startDate = DateTime.Now;
-
-            //Calculate countdown timer.
-            TimeSpan t = _userRepository.GetUser(id).ReleaseDate - startDate;
-            //string countDown =
-               _userRepository.GetUser(id).DaysLeft = string.Format("You will be released in {0} Days, {1} Hours, {2} Minutes, {3} Seconds.", t.Days, t.Hours, t.Minutes, t.Seconds);
-            return Ok(_userRepository.GetUser(id).DaysLeft);
         }
     }
         public class CreateUserRequestValidator
