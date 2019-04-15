@@ -10,9 +10,10 @@ namespace ClinkedIn.DataRepository
     {
         static List<Inmate> _inmates = new List<Inmate>();
 
-        public Inmate AddUser(string username, string password)
+        public Inmate AddUser(string username, string password, DateTime releaseDate)
         {
-            var newUser = new Inmate(username, password);
+            var newUser = new Inmate(username, password, releaseDate);
+            //newUser.FriendId.Add(friendId);
             newUser.Id = _inmates.Count + 1;
 
             _inmates.Add(newUser);
@@ -34,12 +35,12 @@ namespace ClinkedIn.DataRepository
             return user;
         }
 
-        public Inmate GetUserDays(int daysleft)
-        {
-            var getUser = GetUsers();
-            var user = _inmates.Where(something => something.DaysLeft == daysleft).SingleOrDefault(); 
-            return user;
-        }
+        //public Inmate GetUserDays(int daysleft)
+        //{
+        //    var getUser = GetUsers();
+        //    var user = _inmates.Where(something => something.DaysLeft == daysleft).SingleOrDefault(); 
+        //    return user;
+        //}
 
         public Inmate GetUsersByInterests(string interests)
         {

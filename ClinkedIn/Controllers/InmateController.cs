@@ -30,7 +30,8 @@ namespace ClinkedIn.Controllers
                     return BadRequest(new { error = "users must have a username and password" });
                 }
 
-            var newUser = _userRepository.AddUser(createRequest.Username, createRequest.Password);
+                var newUser = _userRepository.AddUser(createRequest.Username, createRequest.Password, createRequest.ReleaseDate);
+
 
                 return Created($"api/users/{newUser.Id}", newUser);
 
@@ -102,13 +103,13 @@ namespace ClinkedIn.Controllers
             return Ok(user);
         }
 
-        [HttpPost("{id}/daysleft/{daysLeft}")]
-        public ActionResult AddSentenceLength(int id, int daysLeft)
-        {
-            _userRepository.GetUser(id).DaysLeft = daysLeft;
+        //[HttpPost("{id}/daysleft/{daysLeft}")]
+        //public ActionResult AddSentenceLength(int id, int daysLeft)
+        //{
+        //    _userRepository.GetUser(id).DaysLeft = daysLeft;
            
-            return Ok(_userRepository.GetUser(id));
-        }
+        //    return Ok(_userRepository.GetUser(id));
+        //}
 
         [HttpGet("allInmates")]
         public ActionResult GetUsers()
@@ -154,6 +155,20 @@ namespace ClinkedIn.Controllers
             var userInterests = _userRepository.GetUser(id);
             userInterests.Interests.Remove(interests);
             return Ok(userInterests);
+        }
+
+        [HttpPut("{id}/getsentence")]
+        public ActionResult GetSentence(int id)
+        {
+            //Get these values however you like.
+            //DateTime daysLeft = DateTime.Parse("1/1/2012 12:00:01 AM");
+            DateTime startDate = DateTime.Now;
+
+            //Calculate countdown timer.
+            TimeSpan t = _userRepository.GetUser(id).ReleaseDate - startDate;
+            //string countDown =
+               _userRepository.GetUser(id).DaysLeft = string.Format("You will be released in {0} Days, {1} Hours, {2} Minutes, {3} Seconds.", t.Days, t.Hours, t.Minutes, t.Seconds);
+            return Ok(_userRepository.GetUser(id).DaysLeft);
         }
     }
         public class CreateUserRequestValidator
