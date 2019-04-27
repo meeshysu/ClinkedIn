@@ -99,6 +99,33 @@ namespace ClinkedIn.DataRepository
             throw new System.Exception("No user found");
         }
 
+        public UserInterest AddUserInterest(int userid, int interestid)
+        {
+            var connection = new SqlConnection(ConnectionString);
+            connection.Open();
+
+            var addUserInterests = connection.CreateCommand();
+            addUserInterests.CommandText = $@"Insert into [userinterests](userid, interestid)
+                                       Output inserted.*
+                                       Values(@userid, @interestid)";
+
+            addUserInterests.Parameters.AddWithValue("userid", userid);
+            addUserInterests.Parameters.AddWithValue("interestid", interestid);
+
+            var reader = addUserInterests.ExecuteReader();
+
+            if (reader.Read())
+            {
+                var insertedId = (int)reader["Id"];
+
+                var newUserInterest = new UserInterest(userid, interestid) { Id = insertedId };
+                connection.Close();
+                return newUserInterest;
+            }
+            throw new System.Exception("No interest added");
+        }
+
+
         public List<Inmate> GetAll()
         {
             //create a list of users
@@ -161,19 +188,8 @@ namespace ClinkedIn.DataRepository
 
             //return the list
             return interests;
-
-
-
-
-
-            //public Inmate GetUsersByInterests(string interests)
-            //{
-
-            //    var getUserInterests = _inmates.Where(something => something.Interests.Contains(interests)).SingleOrDefault();
-            //    return getUserInterests;
-            //}
-
         }
+
         public Inmate GetUser(int id)
         {
             var getUser = GetAll();
@@ -231,9 +247,6 @@ namespace ClinkedIn.DataRepository
 
             if (reader.Read())
             {
-                //var insertedName = (int)reader["name"];
-                //var insertedDescription = (int)reader["description"];
-
                 var insertedId = (int)reader["Id"];
 
                 var newUserService = new UserServices(userid, serviceid) { Id = insertedId };
@@ -244,3 +257,9 @@ namespace ClinkedIn.DataRepository
         }
     }
 }
+//public Inmate GetUsersByInterests(string interests)
+//{
+
+//    var getUserInterests = _inmates.Where(something => something.Interests.Contains(interests)).SingleOrDefault();
+//    return getUserInterests;
+//}
