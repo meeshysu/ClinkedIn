@@ -41,17 +41,6 @@ namespace ClinkedIn.DataRepository
                 }
             }
             throw new System.Exception("No user found");
-
-            //static List<Inmate> _inmates = new List<Inmate>();
-
-            //public Inmate AddUser(string username, string password, DateTime releaseDate)
-            //{
-            //    var newUser = new Inmate(username, password, releaseDate);
-            //    newUser.Id = _inmates.Count + 1;
-
-            //    _inmates.Add(newUser);
-
-            //    return newUser;
         }
 
         public Interest AddInterest(string name, int id)
@@ -172,24 +161,30 @@ namespace ClinkedIn.DataRepository
 
             //return the list
             return interests;
-        }
-        //public List<Inmate> GetUsers()
-        //{
-        //    return _inmates;
-        //}
 
-<<<<<<< HEAD
+
+
+
+
+            //public Inmate GetUsersByInterests(string interests)
+            //{
+
+            //    var getUserInterests = _inmates.Where(something => something.Interests.Contains(interests)).SingleOrDefault();
+            //    return getUserInterests;
+            //}
+
+        }
         public Inmate GetUser(int id)
         {
             var getUser = GetAll();
             var user = (from userz in getUser
-                       where userz.Id == id
-                       select userz).SingleOrDefault();
+                        where userz.Id == id
+                        select userz).SingleOrDefault();
             return user;
-=======
-        public Services AddService(string name, string description, double price)
+        }
 
-        {         
+        public Services AddService(string name, string description, double price)
+        {
             var connection = new SqlConnection(ConnectionString);
             connection.Open();
 
@@ -217,11 +212,9 @@ namespace ClinkedIn.DataRepository
                 return newService;
             }
             throw new System.Exception("No service added");
-
         }
 
         public UserServices AddUserService(int userid, int serviceid)
-
         {
             var connection = new SqlConnection(ConnectionString);
             connection.Open();
@@ -248,17 +241,6 @@ namespace ClinkedIn.DataRepository
                 return newUserService;
             }
             throw new System.Exception("No service added");
-
->>>>>>> master
         }
-
-        //public Inmate GetUsersByInterests(string interests)
-        //{
-
-        //    var getUserInterests = _inmates.Where(something => something.Interests.Contains(interests)).SingleOrDefault();
-        //    return getUserInterests;
-        //}
-
     }
 }
-
