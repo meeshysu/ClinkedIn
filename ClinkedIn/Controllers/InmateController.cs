@@ -39,10 +39,10 @@ namespace ClinkedIn.Controllers
         }
 
         [HttpPost("{id}/addservices/{service}")]
-        public ActionResult AddService(CreateServiceRequest createRequest)
+        public ActionResult AddService(CreateServiceRequest createRequest, int id )
         {
             var newService = _userRepository.AddService(createRequest.Name, createRequest.Description, createRequest.Price);
-
+            var newUserService = _userRepository.AddUserService(id, newService.Id);
             return Ok(newService);
         }
 

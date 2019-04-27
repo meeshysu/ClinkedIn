@@ -122,7 +122,39 @@ namespace ClinkedIn.DataRepository
                 var insertedId = (int)reader["Id"];
 
                 var newService = new Services(insertedName, insertedDescription, insertedPrice) { Id = insertedId };
+                connection.Close();
                 return newService;
+            }
+            throw new System.Exception("No service added");
+
+        }
+
+        public UserServices AddUserService(int userid, int serviceid)
+
+        {
+            var connection = new SqlConnection(ConnectionString);
+            connection.Open();
+
+            var addUserServices = connection.CreateCommand();
+            addUserServices.CommandText = $@"Insert into [userservices](userid, serviceid)
+                                       Output inserted.*
+                                       Values(@userid, @serviceid)";
+
+            addUserServices.Parameters.AddWithValue("userid", userid);
+            addUserServices.Parameters.AddWithValue("serviceid", serviceid);
+
+            var reader = addUserServices.ExecuteReader();
+
+            if (reader.Read())
+            {
+                //var insertedName = (int)reader["name"];
+                //var insertedDescription = (int)reader["description"];
+
+                var insertedId = (int)reader["Id"];
+
+                var newUserService = new UserServices(userid, serviceid) { Id = insertedId };
+                connection.Close();
+                return newUserService;
             }
             throw new System.Exception("No service added");
 
