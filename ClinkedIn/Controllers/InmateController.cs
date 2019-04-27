@@ -38,6 +38,15 @@ namespace ClinkedIn.Controllers
 
         }
 
+        [HttpPost("{id}/addservices/{service}")]
+        public ActionResult AddService(CreateServiceRequest createRequest, int id )
+        {
+            var newService = _userRepository.AddService(createRequest.Name, createRequest.Description, createRequest.Price);
+            var newUserService = _userRepository.AddUserService(id, newService.Id);
+            return Ok(newService);
+        }
+
+
         [HttpGet("allInmates")]
         public ActionResult GetUsers()
         {
@@ -90,22 +99,6 @@ namespace ClinkedIn.Controllers
     //            user.EnemisIds.Remove(friendId);
     //        }
     //        user.FriendId.Add(friendId);
-    //        return Ok(user);
-    //    }
-
-    //    [HttpPost("{id}/addinterest/{interests}/")]
-    //    public ActionResult AddInterests(int id, string interests)
-    //    {
-    //        var userInterests = _userRepository.GetUser(id);
-    //        userInterests.Interests.Add(interests);
-    //        return Ok(userInterests);
-    //    }
-
-    //    [HttpPost("{id}/addservices/{service}")]
-    //    public ActionResult AddService(int id, string service)
-    //    {
-    //        var user = _userRepository.GetUser(id);
-    //        user.Service.Add(service);
     //        return Ok(user);
     //    }
 
