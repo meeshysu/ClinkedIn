@@ -38,12 +38,21 @@ namespace ClinkedIn.Controllers
 
         }
 
+<<<<<<< HEAD
         [HttpPost("{id}/interest/{interest}")]
         public ActionResult AddInterest(CreateInterestRequest createInterestRequest)
         {
             var newInterestz = _userRepository.AddInterest(createInterestRequest.Name, createInterestRequest.Id);
 
             return Ok(newInterestz);
+=======
+        [HttpPost("{id}/addservices/{service}")]
+        public ActionResult AddService(CreateServiceRequest createRequest, int id )
+        {
+            var newService = _userRepository.AddService(createRequest.Name, createRequest.Description, createRequest.Price);
+            var newUserService = _userRepository.AddUserService(id, newService.Id);
+            return Ok(newService);
+>>>>>>> master
         }
 
 
@@ -102,6 +111,7 @@ namespace ClinkedIn.Controllers
     //        return Ok(user);
     //    }
 
+<<<<<<< HEAD
 
     //    [HttpPost("{id}/addservices/{service}")]
     //    public ActionResult AddService(int id, string service)
@@ -111,6 +121,8 @@ namespace ClinkedIn.Controllers
     //        return Ok(user);
     //    }
 
+=======
+>>>>>>> master
     //    [HttpPut("{id}/editinterest/{myInterests}/{editedInterest}")]
     //    public ActionResult EditInterests(int id, string myInterests, string editedInterest)
     //    {

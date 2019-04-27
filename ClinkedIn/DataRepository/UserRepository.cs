@@ -178,6 +178,7 @@ namespace ClinkedIn.DataRepository
         //    return _inmates;
         //}
 
+<<<<<<< HEAD
         public Inmate GetUser(int id)
         {
             var getUser = GetAll();
@@ -185,6 +186,70 @@ namespace ClinkedIn.DataRepository
                        where userz.Id == id
                        select userz).SingleOrDefault();
             return user;
+=======
+        public Services AddService(string name, string description, double price)
+
+        {         
+            var connection = new SqlConnection(ConnectionString);
+            connection.Open();
+
+            var addServices = connection.CreateCommand();
+            addServices.CommandText = $@"Insert into [services](name, description, price)
+                                       Output inserted.*
+                                       Values(@name, @description, @price)";
+
+            addServices.Parameters.AddWithValue("name", name);
+            addServices.Parameters.AddWithValue("description", description);
+            addServices.Parameters.AddWithValue("price", price);
+
+            var reader = addServices.ExecuteReader();
+
+            if (reader.Read())
+            {
+                var insertedName = reader["name"].ToString();
+                var insertedDescription = reader["description"].ToString();
+                var insertedPrice = (int)reader["price"];
+
+                var insertedId = (int)reader["Id"];
+
+                var newService = new Services(insertedName, insertedDescription, insertedPrice) { Id = insertedId };
+                connection.Close();
+                return newService;
+            }
+            throw new System.Exception("No service added");
+
+        }
+
+        public UserServices AddUserService(int userid, int serviceid)
+
+        {
+            var connection = new SqlConnection(ConnectionString);
+            connection.Open();
+
+            var addUserServices = connection.CreateCommand();
+            addUserServices.CommandText = $@"Insert into [userservices](userid, serviceid)
+                                       Output inserted.*
+                                       Values(@userid, @serviceid)";
+
+            addUserServices.Parameters.AddWithValue("userid", userid);
+            addUserServices.Parameters.AddWithValue("serviceid", serviceid);
+
+            var reader = addUserServices.ExecuteReader();
+
+            if (reader.Read())
+            {
+                //var insertedName = (int)reader["name"];
+                //var insertedDescription = (int)reader["description"];
+
+                var insertedId = (int)reader["Id"];
+
+                var newUserService = new UserServices(userid, serviceid) { Id = insertedId };
+                connection.Close();
+                return newUserService;
+            }
+            throw new System.Exception("No service added");
+
+>>>>>>> master
         }
 
         //public Inmate GetUsersByInterests(string interests)
