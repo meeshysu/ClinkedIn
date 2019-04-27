@@ -82,6 +82,34 @@ namespace ClinkedIn.DataRepository
             throw new System.Exception("No user found");
         }
 
+        public Interest UserInterestId(int userid, int interestid)
+        {
+            using (var connection = new SqlConnection(ConnectionString))
+            {
+                connection.Open();
+                var insertUserCommand = connection.CreateCommand();
+                insertUserCommand.CommandText = $@"Insert into [interests](userid)
+                                              Output inserted.*
+                                              Values(@userid)";
+
+                insertUserCommand.Parameters.AddWithValue("userid", userid); //username from our AddUser parameter.
+
+                var reader = insertUserCommand.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    var insertedInterestName = reader["userid"].ToString();
+
+
+                    var insertedId = (int)reader["Id"];
+
+                    var newInterest = new Interest(insertedInterestName) { Id = insertedId };
+                    return newInterest;
+                }
+            }
+            throw new System.Exception("No user found");
+        }
+
         public List<Inmate> GetAll()
         {
             //create a list of users
