@@ -21,11 +21,9 @@ namespace ClinkedIn.DataRepository
                                               Values(@username, @password, @releaseDate, @age)";
 
                 insertUserCommand.Parameters.AddWithValue("username", username); //username from our AddUser parameter.
-                insertUserCommand.Parameters.AddWithValue("password", username);
+                insertUserCommand.Parameters.AddWithValue("password", password);
                 insertUserCommand.Parameters.AddWithValue("releaseDate", releaseDate);
                 insertUserCommand.Parameters.AddWithValue("age", age);
-
-
 
                 var reader = insertUserCommand.ExecuteReader();
 
@@ -43,6 +41,7 @@ namespace ClinkedIn.DataRepository
                 }
             }
             throw new System.Exception("No user found");
+
             //static List<Inmate> _inmates = new List<Inmate>();
 
             //public Inmate AddUser(string username, string password, DateTime releaseDate)
@@ -53,6 +52,34 @@ namespace ClinkedIn.DataRepository
             //    _inmates.Add(newUser);
 
             //    return newUser;
+        }
+
+        public Interest AddInterest(string name, int id)
+        {
+            using (var connection = new SqlConnection(ConnectionString))
+            {
+                connection.Open();
+                var insertUserCommand = connection.CreateCommand();
+                insertUserCommand.CommandText = $@"Insert into [interests](name)
+                                              Output inserted.*
+                                              Values(@name)";
+
+                insertUserCommand.Parameters.AddWithValue("name", name); //username from our AddUser parameter.
+
+                var reader = insertUserCommand.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    var insertedInterestName = reader["name"].ToString();
+
+
+                    var insertedId = (int)reader["Id"];
+
+                    var newInterest = new Interest(insertedInterestName) { Id = insertedId };
+                    return newInterest;
+                }
+            }
+            throw new System.Exception("No user found");
         }
 
         public List<Inmate> GetAll()
@@ -91,19 +118,46 @@ namespace ClinkedIn.DataRepository
             return users;
         }
 
+        public List<Interest> GetAllInterest()
+        {
+            var interests = new List<Interest>();
+
+            var connection = new SqlConnection("Server=localhost;Database=ClinkedIn;Trusted_Connection=True;");
+            connection.Open();
+
+            var getAllUsersCommand = connection.CreateCommand();
+            getAllUsersCommand.CommandText = @"select name, id from [interest]";
+
+            var reader = getAllUsersCommand.ExecuteReader();
+
+            while (reader.Read())
+            {
+                var id = (int)reader["Id"];
+                var name = reader["Name"].ToString();
+                var user = new Interest(name) { Id = id };
+
+                interests.Add(user);
+            }
+
+            //close the conection
+            connection.Close();
+
+            //return the list
+            return interests;
+        }
         //public List<Inmate> GetUsers()
         //{
         //    return _inmates;
         //}
 
-        //public Inmate GetUser(int id)
-        //{
-        //    var getUser = GetUsers();
-        //    var user = (from userz in getUser
-        //               where userz.Id == id
-        //               select userz).SingleOrDefault();
-        //    return user;
-        //}
+        public Inmate GetUser(int id)
+        {
+            var getUser = GetAll();
+            var user = (from userz in getUser
+                       where userz.Id == id
+                       select userz).SingleOrDefault();
+            return user;
+        }
 
         //public Inmate GetUsersByInterests(string interests)
         //{

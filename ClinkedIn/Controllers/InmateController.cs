@@ -34,9 +34,18 @@ namespace ClinkedIn.Controllers
             var newUser = _userRepository.AddUser(createRequest.Username, createRequest.Password, createRequest.ReleaseDate, createRequest.Age);
 
 
-            return Created($"api/users/{newUser.Id}", newUser);
+            return Created($"api/inmate/{newUser.Id}", newUser);
 
         }
+
+        [HttpPost("{id}/interest/{interest}")]
+        public ActionResult AddInterest(CreateInterestRequest createInterestRequest)
+        {
+            var newInterestz = _userRepository.AddInterest(createInterestRequest.Name, createInterestRequest.Id);
+
+            return Ok(newInterestz);
+        }
+
 
         [HttpGet("allInmates")]
         public ActionResult GetUsers()
@@ -93,13 +102,6 @@ namespace ClinkedIn.Controllers
     //        return Ok(user);
     //    }
 
-    //    [HttpPost("{id}/addinterest/{interests}/")]
-    //    public ActionResult AddInterests(int id, string interests)
-    //    {
-    //        var userInterests = _userRepository.GetUser(id);
-    //        userInterests.Interests.Add(interests);
-    //        return Ok(userInterests);
-    //    }
 
     //    [HttpPost("{id}/addservices/{service}")]
     //    public ActionResult AddService(int id, string service)
