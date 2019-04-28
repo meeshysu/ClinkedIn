@@ -68,7 +68,7 @@ namespace ClinkedIn.DataRepository
                     return newInterest;
                 }
             }
-            throw new System.Exception("No user found");
+            throw new System.Exception("No interest found");
         }
 
         public Interest UserInterestId(int userid, int interestid)
@@ -89,14 +89,13 @@ namespace ClinkedIn.DataRepository
                 {
                     var insertedInterestName = reader["userid"].ToString();
 
-
                     var insertedId = (int)reader["Id"];
 
                     var newInterest = new Interest(insertedInterestName) { Id = insertedId };
                     return newInterest;
                 }
             }
-            throw new System.Exception("No user found");
+            throw new System.Exception("No interest found");
         }
 
         public UserInterest AddUserInterest(int userid, int interestid)
@@ -128,22 +127,17 @@ namespace ClinkedIn.DataRepository
 
         public List<Inmate> GetAll()
         {
-            //create a list of users
             var users = new List<Inmate>();
 
-            //connect to your local host to get your database
             var connection = new SqlConnection("Server=localhost;Database=ClinkedIn;Trusted_Connection=True;");
             connection.Open();
 
-            //create the command that gets all users: all the information you want from the user
             var getAllUsersCommand = connection.CreateCommand();
             getAllUsersCommand.CommandText = @"select username, password, releaseDate, age, id from [user]";
 
-            //send command thru connection
             var reader = getAllUsersCommand.ExecuteReader();
 
-            //read the results, map it to a type and repository list
-            while (reader.Read())//direct cast
+            while (reader.Read())
             {
                 var id = (int)reader["Id"];
                 var username = reader["username"].ToString();
@@ -154,11 +148,7 @@ namespace ClinkedIn.DataRepository
 
                 users.Add(user);
             }
-
-            //close the conection
             connection.Close();
-
-            //return the list
             return users;
         }
 
@@ -170,7 +160,7 @@ namespace ClinkedIn.DataRepository
             connection.Open();
 
             var getAllUsersCommand = connection.CreateCommand();
-            getAllUsersCommand.CommandText = @"select name, id from [interest]";
+            getAllUsersCommand.CommandText = $@"select name, id from [interests]";
 
             var reader = getAllUsersCommand.ExecuteReader();
 
@@ -183,10 +173,8 @@ namespace ClinkedIn.DataRepository
                 interests.Add(user);
             }
 
-            //close the conection
             connection.Close();
 
-            //return the list
             return interests;
         }
 
