@@ -54,6 +54,12 @@ namespace ClinkedIn.Controllers
             return Ok(newService);
         }
 
+        [HttpGet("allInterests")]
+        public ActionResult GetAllInterest()
+        {
+            var getAllOfTheInterests = _userRepository.GetAllInterest();
+            return Ok(getAllOfTheInterests);
+        }
 
         [HttpGet("allInmates")]
         public ActionResult GetUsers()
