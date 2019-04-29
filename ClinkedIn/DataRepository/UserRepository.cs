@@ -43,6 +43,23 @@ namespace ClinkedIn.DataRepository
             throw new System.Exception("No user found");
         }
 
+        public Inmate DeleteUser(int id)
+        {
+            using (var connection = new SqlConnection(ConnectionString))
+            {
+                connection.Open();
+                var deleteUserCommand = connection.CreateCommand();
+                deleteUserCommand.CommandText = $@"Delete from [user]
+                                              Where id = @id";
+                deleteUserCommand.Parameters.AddWithValue("id", id);
+                deleteUserCommand.ExecuteNonQuery();
+
+
+            }
+            throw new System.Exception("No user found");
+        }
+
+
         public Interest AddInterest(string name, int id)
         {
             using (var connection = new SqlConnection(ConnectionString))
@@ -227,7 +244,6 @@ namespace ClinkedIn.DataRepository
             addUserServices.CommandText = $@"Insert into [userservices](userid, serviceid)
                                        Output inserted.*
                                        Values(@userid, @serviceid)";
-
             addUserServices.Parameters.AddWithValue("userid", userid);
             addUserServices.Parameters.AddWithValue("serviceid", serviceid);
 
@@ -245,9 +261,3 @@ namespace ClinkedIn.DataRepository
         }
     }
 }
-//public Inmate GetUsersByInterests(string interests)
-//{
-
-//    var getUserInterests = _inmates.Where(something => something.Interests.Contains(interests)).SingleOrDefault();
-//    return getUserInterests;
-//}
