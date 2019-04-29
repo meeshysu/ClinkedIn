@@ -13,8 +13,12 @@ namespace ClinkedIn.Models
             Password = password;
             ReleaseDate = releaseDate;
             Age = age;
+            
         }
-
+         public Inmate(int id)
+        {
+            Id = id;
+        }
         public int Id { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }

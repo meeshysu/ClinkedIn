@@ -21,7 +21,7 @@ namespace ClinkedIn.DataRepository
                                               Values(@username, @password, @releaseDate, @age)";
 
                 insertUserCommand.Parameters.AddWithValue("username", username); //username from our AddUser parameter.
-                insertUserCommand.Parameters.AddWithValue("password", username);
+                insertUserCommand.Parameters.AddWithValue("password", password);
                 insertUserCommand.Parameters.AddWithValue("releaseDate", releaseDate);
                 insertUserCommand.Parameters.AddWithValue("age", age);
 
@@ -43,16 +43,22 @@ namespace ClinkedIn.DataRepository
                 }
             }
             throw new System.Exception("No user found");
-            //static List<Inmate> _inmates = new List<Inmate>();
+        }
 
-            //public Inmate AddUser(string username, string password, DateTime releaseDate)
-            //{
-            //    var newUser = new Inmate(username, password, releaseDate);
-            //    newUser.Id = _inmates.Count + 1;
+        public Inmate DeleteUser(int id)
+        {
+            using (var connection = new SqlConnection(ConnectionString))
+            {
+                connection.Open();
+                var deleteUserCommand = connection.CreateCommand();
+                deleteUserCommand.CommandText = $@"Delete from [user]
+                                              Where id = @id";
+                deleteUserCommand.Parameters.AddWithValue("id", id);
+                deleteUserCommand.ExecuteNonQuery();
 
-            //    _inmates.Add(newUser);
-
-            //    return newUser;
+           
+            }
+            throw new System.Exception("No user found");
         }
 
         public List<Inmate> GetAll()
@@ -96,22 +102,14 @@ namespace ClinkedIn.DataRepository
         //    return _inmates;
         //}
 
-        //public Inmate GetUser(int id)
-        //{
-        //    var getUser = GetUsers();
-        //    var user = (from userz in getUser
-        //               where userz.Id == id
-        //               select userz).SingleOrDefault();
-        //    return user;
-        //}
-
-        //public Inmate GetUsersByInterests(string interests)
-        //{
-
-        //    var getUserInterests = _inmates.Where(something => something.Interests.Contains(interests)).SingleOrDefault();
-        //    return getUserInterests;
-        //}
-
+        public Inmate GetUser(int id)
+        {
+            var getUser = GetAll();
+            var user = (from userz in getUser
+                       where userz.Id == id
+                       select userz).SingleOrDefault();
+            return user;
+        }
     }
 }
 
