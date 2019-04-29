@@ -34,8 +34,31 @@ namespace ClinkedIn.Controllers
             var newUser = _userRepository.AddUser(createRequest.Username, createRequest.Password, createRequest.ReleaseDate, createRequest.Age);
 
 
-            return Created($"api/users/{newUser.Id}", newUser);
+            return Created($"api/inmate/{newUser.Id}", newUser);
 
+        }
+
+        [HttpPost("{id}/interest/{interest}")]
+        public ActionResult AddInterest(CreateInterestRequest createInterestRequest, int id)
+        {
+            var newInterestz = _userRepository.AddInterest(createInterestRequest.Name, createInterestRequest.Id);
+            var newUserInterest = _userRepository.AddUserInterest(id, newInterestz.Id);
+            return Ok(newInterestz);
+        }
+
+        [HttpPost("{id}/addservices/{service}")]
+        public ActionResult AddService(CreateServiceRequest createRequest, int id )
+        {
+            var newService = _userRepository.AddService(createRequest.Name, createRequest.Description, createRequest.Price);
+            var newUserService = _userRepository.AddUserService(id, newService.Id);
+            return Ok(newService);
+        }
+
+        [HttpGet("allInterests")]
+        public ActionResult GetAllInterest()
+        {
+            var getAllOfTheInterests = _userRepository.GetAllInterest();
+            return Ok(getAllOfTheInterests);
         }
 
         [HttpGet("allInmates")]
@@ -159,6 +182,7 @@ namespace ClinkedIn.Controllers
         //        userInterests.Interests.Remove(interests);
         //        return Ok(userInterests);
         //    }
+
     }
 
     public class CreateUserRequestValidator
